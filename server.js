@@ -15,8 +15,6 @@ const server = http.createServer((req,res) => {
     //res.end()// works without end() tho but will keep sending request?
    // res.write(JSON.stringify(products))//JSON.stringify()
 
-
-    console.log(Product)
     if (req.url === '/api/products' && req.method === "GET"){
         Product.getProducts(req,res)
         //res.writeHead(200, {'Content-Type': 'application/json'}) // instead of res.statusCode && res.setHeader
@@ -27,7 +25,8 @@ const server = http.createServer((req,res) => {
         // if there is a match fire off in whatever in here 
        const id = req.url.split('/')[3]
        Product.getProduct(req, res, id)
-    } else if (req.url === 'api/products' && req.method === 'POST') {
+    } else if (req.url === '/api/products' && req.method === 'POST') {
+       // console.log('POST')
        Product.createProduct(req,res) 
     } else {
         res.writeHead(404, {'Content-Type': 'application/json'}) // instead of res.statusCode && res.setHeader
