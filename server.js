@@ -28,6 +28,11 @@ const server = http.createServer((req,res) => {
     } else if (req.url === '/api/products' && req.method === 'POST') {
        // console.log('POST')
        Product.createProduct(req,res) 
+    } else if (req.url.match(/\/api\/products\/([0-9]+)/) && req.method === "PUT"){
+        // back slash "\" is to escape the forward slash 
+        // if there is a match fire off in whatever in here 
+       const id = req.url.split('/')[3]
+       Product.updateProduct(req, res, id)
     } else {
         res.writeHead(404, {'Content-Type': 'application/json'}) // instead of res.statusCode && res.setHeader
         res.end(JSON.stringify({message: 'Route Not Found'}))
