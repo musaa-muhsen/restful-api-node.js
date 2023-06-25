@@ -74,21 +74,23 @@ async function updateProduct(req,res,id){
     try {
      
         const product = await Product.findById(id);
+       
 
         if (!product){
+            console.log('product update', product)
             res.writeHead(404, {'Content-Type': 'application/json'}) 
             res.end(JSON.stringify({message: 'Product Not Found'}))
         } else {
-            const body = await getpostData(req);// the new data been added
+            const body = await Utils.getpostData(req);// the new data been added
             const {title, description, price} = JSON.parse(body);
-             // product.title etc is what already 
+             // product.title etc is what already is there
             const productData = {
                 title: title || product.title,
                 description: description || product.description,
                 price: price || product.price
             }
               const updProduct = await Product.update(id, productData);
-             // console.log('newProduct',newProduct)
+             console.log('updProduct',updProduct)
                 // 201 means created 
               res.writeHead(200, {'Content-Type': 'application/json'})
               return res.end(JSON.stringify(updProduct))
@@ -100,12 +102,32 @@ async function updateProduct(req,res,id){
     }
 }
 
+// @desc Delete Product 
+// @route DELETE /api/product/:id
+async function deleteProduct(req,res,id){
+    try {
+        const product = await Product.findById(id);
+        if (!product){
+            res.writeHead(404, {'Content-Type': 'application/json'}) 
+            res.end(JSON.stringify({message: 'Product Not Found'}))
+        } else {
+            await Product.remove(id)
+            res.writeHead(200, {'Content-Type': 'application/json'}) 
+            res.end(JSON.stringify({message: `Product: ${id} removed.`}))
+        }
+    
 
+    } catch (error){
+       console.log(error)
+    }
+}
 
 
 module.exports = {
     getProducts,
     getProduct,
-    createProduct
+    createProduct,
+    updateProduct,
+    deleteProduct
 
 }

@@ -20,7 +20,7 @@ const server = http.createServer((req,res) => {
         //res.writeHead(200, {'Content-Type': 'application/json'}) // instead of res.statusCode && res.setHeader
 
         //res.end(JSON.stringify(products))
-    } else if (req.url.match(/\/api\/products\/([0-9]+)/) && req.method === "GET"){
+    } else if (req.url.match(/\/api\/products\/\w+/) && req.method === "GET"){
         // back slash "\" is to escape the forward slash 
         // if there is a match fire off in whatever in here 
        const id = req.url.split('/')[3]
@@ -28,12 +28,16 @@ const server = http.createServer((req,res) => {
     } else if (req.url === '/api/products' && req.method === 'POST') {
        // console.log('POST')
        Product.createProduct(req,res) 
-    } else if (req.url.match(/\/api\/products\/([0-9]+)/) && req.method === "PUT"){
-        // back slash "\" is to escape the forward slash 
-        // if there is a match fire off in whatever in here 
+    } else if (req.url.match(/\/api\/products\/\w+/) && req.method === "PUT"){
        const id = req.url.split('/')[3]
+       console.log('id',id)
        Product.updateProduct(req, res, id)
-    } else {
+    } else if (req.url.match(/\/api\/products\/\w+/) && req.method === "DELETE"){
+        const id = req.url.split('/')[3]
+        console.log('id',id)
+        Product.deleteProduct(req, res, id)
+     } else {
+        console.log('eeek')
         res.writeHead(404, {'Content-Type': 'application/json'}) // instead of res.statusCode && res.setHeader
         res.end(JSON.stringify({message: 'Route Not Found'}))
     }
